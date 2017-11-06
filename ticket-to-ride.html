@@ -2,9 +2,9 @@
 <html>
 <head>
 	<title>Ticket to Ride</title>
-	<!-- Bootstrap -->
+	<!-- Link to Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link href="ticket-to-ride.js">
+    
 	<style type="text/css">
 
 		body {
@@ -26,11 +26,9 @@
 		.jumbotron {
 			background-color: rgba(0, 128, 0, 0.7);
 			color: #fff;
-			font-family: Georgia, serif;
+			font-family: Georgia, "Times New Roman", serif;
 			text-align: center;
 		}
-
-		
 
 	</style>
 
@@ -46,36 +44,63 @@
 		<div class="panel panel-primary">
 		  <div class="panel-heading">Current Train Schedule</div>
 		  <div class="panel-body">
-		    <!--Panel content to be the table of entered data-->
-		  </div>
-		</div>
+		    <!--Table of train data-->
+		    <table class="table table-hover" id="train-table">
+		    	<thead>
+		    		<tr>
+		    			<th>Train Name</th>
+		    			<th>Destination</th>
+		    			<th>Frequency (min)</th>
+		    			<th>Next Arrival</th>
+		    			<th>Minutes Away</th>
+		    		</tr>
+		    	</thead>
+		    	<tbody></tbody>
+		    </table>
+		  </div> <!--Panel Body close-->
+		</div> <!--Panel Heading close-->
 
 		<div class="panel panel-primary">
 		  <div class="panel-heading">Add Train</div>
 		  <div class="panel-body">
-		    <!--Panel content to be the form to add more trains to the table-->
+		    <!--form for adding trains-->
+		    <form>
+		    	
+		    	<div class="form-group">
+		    		<label for="Tname">Train Name:</label>
+		    		<input type="text" class="form-control" id="Tname">
+		    	</div>
+
+				<div class="form-group">
+					<label for="Dest">Destination:</label>
+					<input type="text" class="form-control" id="Dest">
+				</div>
+
+				<div class="form-group">
+					<label for="firstTrain">First Train Time:</label>
+					<input type="time" id="firstTrain" class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label for="freq">Frequency: (min)</label>
+					<input type="number" id="freq" class="form-control">
+				</div>
+
+				<button class="btn btn-primary" id="sub-butt" type="submit">Submit</button>
+		    </form>
+		    <!--End of Form-->
 		  </div>
-		</div>
+		</div><!--End of Panel-->
 		
 	</div><!--container close-->
 
-	
+		<!--Link to firebase-->
 	<script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
-	<script>
-	  // Initialize Firebase
-	  var config = {
-	    apiKey: "AIzaSyBM-xtif2hMwSvb3IpGXlMk78KMjnobEeI",
-	    authDomain: "tickettoride-ef43c.firebaseapp.com",
-	    databaseURL: "https://tickettoride-ef43c.firebaseio.com",
-	    projectId: "tickettoride-ef43c",
-	    storageBucket: "",
-	    messagingSenderId: "130697707364"
-	  };
-	  firebase.initializeApp(config);
-	</script>
-	<!--Link for jQuery-->
+		<!--Link for jQuery-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<!-- Added Moment JS -->
+	<!-- Link to Moment JS -->
   <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+  	<!--Link to JS page-->
+  <script src="ticket-to-ride.js"></script>
 </body>
 </html>
