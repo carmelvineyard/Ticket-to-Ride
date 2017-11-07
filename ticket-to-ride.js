@@ -33,17 +33,19 @@ $("#sub-butt").on("click", function(event) {
 	console.log("First arrival from form: ", ftTime);
 	console.log("Frequency from form: ", freqMin);
 
-	if (freqMin === "") {
+	if (train === "") {
 		alert("Please complete the form.");
 	} else {
+
 		//push to database
+
 		dataRef.ref().push({
 			Tname: train,
 			Dest: city,
 			firstTrain: ftTime,
 			freq: freqMin
 
-		}); //push close
+		}); //push close 
 
 		//clear the form after data submission
 		$("#Tname").val("");
@@ -58,27 +60,26 @@ $("#sub-butt").on("click", function(event) {
 //the user adds a train.
 dataRef.ref().on("child_added", function(childSnapshot, prevChildKey){
 
-	console.log(childSnapshot.val());
+	console.log("childSnapshot: ", childSnapshot.val());
 	// store the snapshot into variables
 	var chTname = childSnapshot.val().Tname;
 	var chDest = childSnapshot.val().Dest;
 	var chFtrain = childSnapshot.val().firstTrain;
 	var chFreq = childSnapshot.val().freq;
 
-	console.log("chTname: ", chTname);
-	console.log("chDest: ", chDest);
 	console.log("chFtrain: ", chFtrain);
-	console.log("chFreq: ", chFreq);
 
-	//calculate next arrival
-	//First time (pushed back 1 year to make sure it is before current time.)
+	//calculate next arrival and number of minutes until next arrival:
+
+	//convert first train time to 1 year ago:
 	var firstConvert = moment(chFtrain, "HH:mm").subtract(1, "years");
 	console.log("firstConvert: ", firstConvert);
+	
 	//Current time
 	var currentTime = moment();
 	console.log("current time: ", moment(currentTime).format("HH:mm"));
 	//Difference between the times
-	var timeDiff = moment().diff(moment(firstConvert), "minutes");
+	var timeDiff = currentTime.diff(firstConvert, "minutes");
 	console.log("time difference: ", timeDiff);
 	//time apart (Remainder)
 	var Remainder = timeDiff % chFreq;
@@ -87,8 +88,23 @@ dataRef.ref().on("child_added", function(childSnapshot, prevChildKey){
 	var minutesTil = chFreq - Remainder;
 	console.log("minutes until next train: ", minutesTil);
 	//next train time
-	var nextTrain = moment().add(minutesTil, "minutes");
-	console.log("next arrival time: ", moment(nextTrain).format("HH:mm"));
+	var nextTrain = moment().add(minutesTil, "minutes").format("HH:mm");
+	console.log("next arrival time: ", moment(nextTrain));
+	console.log("------------------------------------------------------------");
+
+/*
+	var timeDiff = moment().diff(moment(chFtrain), "minutes");
+	console.log("timeDiff: ", timeDiff);
+	var Remainder = moment().diff(moment(chFtrain), "minutes") % chFreq;
+	console.log("Remainder: ", Remainder);
+	var minutesTil = chFreq - Remainder;
+	console.log("minutesTil ", minutesTil);
+
+
+	var nextTrain = moment().add(minutesTil, "minutes").format("HH:mm A");
+	console.log("next arrival: ", nextTrain, "| in ", minutesTil, " minutes.");
+*/
+
 
 	//Add train data to the table
 	$("#train-table > tbody").append("<tr><td>" + chTname + "</td><td>" + chDest + "</td><td>" +
