@@ -26,6 +26,7 @@ $("#sub-butt").on("click", function(event) {
 	city = $("#Dest").val().trim();
 	ftTime = $("#firstTrain").val().trim();
 	freqMin = $("#freq").val().trim();
+	freqMin = parseInt(freqMin);
 
 	console.log("Name from form: ", train);
 	console.log("Destination from form: ", city);
@@ -43,7 +44,7 @@ $("#sub-butt").on("click", function(event) {
 			freq: freqMin
 
 		}); //push close
-		
+
 		//clear the form after data submission
 		$("#Tname").val("");
 		$("#Dest").val("");
@@ -52,3 +53,46 @@ $("#sub-butt").on("click", function(event) {
 
 	} // if-else close
 }); // onclick function close
+
+//firebase event for adding a row to the HTML when 
+//the user adds a train.
+dataRef.ref().on("child_added", function(childSnapshot, prevChildKey){
+
+	console.log(childSnapshot.val());
+	// store the snapshot into variables
+	var chTname = childSnapshot.val().Tname;
+	var chDest = childSnapshot.val().Dest;
+	var chFtrain = childSnapshot.val().firstTrain;
+	var chFreq = childSnapshot.val().freq;
+
+	console.log("chTname: ", chTname);
+	console.log("chDest: ", chDest);
+	console.log("chFtrain: ", chFtrain);
+	console.log("chFreq: ", chFreq);
+
+	//calculate next arrival
+	//First time (pushed back 1 year to make sure it is before current time.)
+	var firstConvert = moment(chFtrain, "HH:mm").subtract(1, "years");
+	console.log("firstConvert: ", firstConvert);
+	//Current time
+	var currentTime = moment();
+	console.log("current time: ", moment(currentTime).format("HH:mm"));
+	//Difference between the times
+	var timeDiff = moment().diff(moment(firstConvert), "minutes");
+	console.log("time difference: ", timeDiff);
+	//time apart (Remainder)
+	var Remainder = timeDiff % chFreq;
+	console.log("Remainder: ", Remainder);
+	//minutes until train
+	var minutesTil = chFreq - Remainder;
+	console.log("minutes until next train: ", minutesTil);
+	//next train time
+	var nextTrain = moment().add(minutesTil, "minutes");
+	console.log("next arrival time: ", moment(nextTrain).format("HH:mm"));
+
+	//Add train data to the table
+	$("#train-table > tbody").append("<tr><td>" + chTname + "</td><td>" + chDest + "</td><td>" +
+  chFreq + "</td><td>" + nextTrain + "</td><td>" + minutesTil + "</td></tr>");
+	
+
+}); //on child_added close
